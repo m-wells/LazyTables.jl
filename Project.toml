@@ -3,6 +3,9 @@ uuid = "3f3958f0-9dd7-4ba3-9331-125492819f7d"
 authors = ["m-wells <mwellsa@gmail.com> and contributors"]
 version = "0.1.0"
 
+[deps]
+TypedTables = "9d95f2ec-7b3d-5a63-8d20-e2491e220bb9"
+
 [compat]
 julia = "1"
 
