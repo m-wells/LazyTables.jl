@@ -1,0 +1,13 @@
+name = "LazyTables"
+uuid = "3f3958f0-9dd7-4ba3-9331-125492819f7d"
+authors = ["m-wells <mwellsa@gmail.com> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
