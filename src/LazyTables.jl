@@ -17,12 +17,12 @@ Private
 #===========================================================================================
 Constructors
 ===========================================================================================#
-struct LazyRow{K, V} <: Tables.AbstractRow
-    columns::NamedTuple{K, V}
+struct LazyRow{K} <: Tables.AbstractRow
+    columns::K
     index::Int
 end
 
-struct LazyTable{K, N, V} <: AbstractArray{LazyRow{K, V}, N}
+struct LazyTable{K, N, V} <: AbstractArray{LazyRow{V}, N}
     table::Table{K, N, V}
     columns::V
 
@@ -37,12 +37,23 @@ end
 #===========================================================================================
 AbstractArray Interface
 ===========================================================================================#
+# @inline Base.eltype(::Type{LazyTable{K}}) where K = LazyRow{K}
+# @inline Base.iterate(lz::LazyTable, st=1) = st > length(lz) ? nothing : (lz[st], st+1)
 @inline Base.getindex(lz::LazyTable, i::Int) = LazyRow(columns(lz), i)
+@inline function Base.getindex(lz::LazyTable, i::AbstractVector{<:Integer})
+    LazyTable(_table(lz)[i])
+end
 
 # offload to TypedTables
+@inline Base.length(lz::LazyTable) = length(_table(lz))
 @inline Base.size(lz::LazyTable) = size(_table(lz))
 @inline Base.axes(lz::LazyTable) = axes(_table(lz))
 @inline Base.IndexStyle(lz::LazyTable) = IndexStyle(_table(lz))
+
+function Base.show(io::IO, ::MIME"text/plain", lz::LazyTable)
+    print(io, "Lazy")
+    show(io, MIME("text/plain"), _table(lz))
+end
 
 #===========================================================================================
 Properties
@@ -61,10 +72,12 @@ Tables Interface
 @inline Tables.schema(::LazyTable{T}) where {T} = Tables.Schema(T)
 @inline Tables.materializer(::LazyTable) = Table
 @inline Tables.columns(table::LazyTable) = Core.getfield(table, :columns)
+@inline Tables.columnnames(::LazyTable{K}) where K = fieldnames(K)
+@inline Tables.getcolumn(table::LazyTable, s::Symbol) = getproperty(table, s)
 
 @inline Tables.columns(row::LazyRow) = Core.getfield(row, :columns)
 @inline Tables.getcolumn(row::LazyRow, s::Symbol) = getproperty(row, s)
-@inline Tables.columnnames(row::LazyRow) = fieldnames(typeof(columns(row)))
+@inline Tables.columnnames(::LazyRow{K}) where K = fieldnames(K)
 @inline Tables.rows(table::LazyTable) = table
 
 end
