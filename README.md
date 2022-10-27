@@ -248,10 +248,12 @@ julia> lazytable[1].x
 ```
 
 ## Differences from `TypedTables.Table`
+
+### `LazyRow`
+
 `LazyTable` does not return a `NamedTuple`.
 Instead it returns a `LazyRow` which should act and feel just like a `NamedTuple` (for the most part).
 
-### `LazyRow`
 ```julia
 julia> using TypedTables: Table
 
@@ -295,6 +297,7 @@ julia> typetable[:x]
 ERROR: ArgumentError: invalid index: :x of type Symbol
 ```
 
+### Multidimensional Columns
 Just like `Table`, multidimensional columns are supported
 
 ```julia
@@ -330,7 +333,7 @@ julia> lazymatrixtable[5,2]
 ```
 
 Although `Table` errors when showing `Array` columns.
-```
+```julia
 julia> typematrixtable = lazymatrixtable |> Table;
 
 julia> lazymatrixtable[5,2]
