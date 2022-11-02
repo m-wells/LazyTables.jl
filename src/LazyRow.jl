@@ -4,7 +4,7 @@ convert_index, needed for LazyRow
 @inline convert_index(::Val{1}, _, i::Int) = (i,)
 @inline convert_index(::Val{1}, axes, i::Tuple{Int}) = i
 @inline convert_index(::Val{1}, axes, i::CartesianIndex) = (LinearIndices(axes)[i],)
-@inline convert_index(::Val{1}, axes, i::Tuple) = (LinearIndices(axes)[i],)
+@inline convert_index(::Val{1}, axes, i::Tuple) = (LinearIndices(axes)[i...],)
 
 @inline convert_index(::Val{N}, _, i::CartesianIndex{N}) where N = i.I
 @inline convert_index(::Val{N}, _, i::NTuple{N, Int}) where N = i

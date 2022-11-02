@@ -63,6 +63,20 @@ Tables Interface
 # rows -------------------------------------------------------------------------------------
 @inline Tables.rowaccess(::Type{<:LazyTable}) = true
 @inline Tables.rows(x::LazyTable) = x
+@inline function Tables.subset(x::LazyTable, inds::AbstractVector; viewhint = nothing)
+    if isnothing(viewhint) || viewhint
+        return view(x, inds)
+    else
+        return LazyTable(table(x)[inds])
+    end
+end
+@inline function Tables.subset(x::LazyTable, i; viewhint = nothing)
+    if isnothing(viewhint) || viewhint
+        return x[i]
+    else
+        return table(x)[inds]
+    end
+end
 
 #===========================================================================================
 methods delegated to table
@@ -70,6 +84,8 @@ methods delegated to table
 @inline Base.getindex(x::LazyTable, i::AbstractVector) = LazyTable(view(table(x), i))
 @inline Base.size(x::LazyTable) = size(table(x))
 @inline Base.IndexStyle(x::LazyTable) = IndexStyle(table(x))
+
+@inline Base.deleteat!(x::LazyTable, i) = deleteat!(table(x), i)
 
 @inline Base.view(x::LazyTable, i) = LazyTable(view(table(x), i))
 
