@@ -79,6 +79,19 @@ end
 end
 
 #===========================================================================================
+other Base methods
+===========================================================================================#
+@inline function Base.merge(x::LazyTable, y::LazyTable)
+    size(x) === size(y) || throw(DimensionMismatch(string(
+        "LazyTable of size ",
+        size(x),
+        " is incompatible with a LazyTable of size ",
+        size(y),
+    )))
+    return LazyTable(merge(data(x), data(y)))
+end
+
+#===========================================================================================
 methods delegated to table
 ===========================================================================================#
 @inline Base.getindex(x::LazyTable, i::AbstractVector) = LazyTable(view(table(x), i))
