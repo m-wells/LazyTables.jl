@@ -6,7 +6,7 @@ Base.summary(io::IO, x::LazyTable) = print(io,
     " rows:",
 )
 
-Base.show(io::IO, x::LazyRow) = Base.show(io, (values(x)...,))
+Base.show(io::IO, x::LazyRow) = Base.show(io, NamedTuple(pairs(x)))
 
 function Base.show(io::IO, ::MIME"text/plain", x::LazyTable)
     K = propertynames(x)
