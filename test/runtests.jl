@@ -46,6 +46,13 @@ end
     @test Tables.getcolumn(lzyrow, :evens) == "2"
     @test Tables.getcolumn(lzyrow, 3) == "2"
     @test propertynames(lzytbl) == propertynames(lzyrow) == (:x, :y, :evens)
+
+    # Tables.subset
+    @test typeof(Tables.subset(lzytbl, 1)) === eltype(lzytbl)
+    @test isa(Tables.subset(lzytbl, 1:5), LazyTable)
+    @test isa(view(lzytbl, 1:5), LazyTable)
+    @test Tables.subset(lzytbl, 1:5) === view(lzytbl, 1:5)
+    @test length(Tables.subset(lzytbl, 1:5)) === 5
 end
 
 @testset "AbstractArray" begin
