@@ -71,9 +71,13 @@ end
     end
     a = rand(10)
     b = rand(Float32, 10)
-    lzyhcat = hcat(LazyTable(; a, b), lzytbl)
-    @test length(lzyhcat) == length(lzytbl)
-    @test Tables.columnnames(lzyhcat) === (:a, :b, :x, :y)
+    lzyhcat = hcat(LazyTable(; x = a, y = b), lzytbl)
+    @test size(lzyhcat)[1] == length(lzytbl)
+    @test size(lzyhcat)[2] == 2
+    lzytbl2 = LazyTable(; a, b)
+    lzymerge = merge(lzytbl, lzytbl2)
+    @test length(lzymerge) === length(lzytbl) === length(lzytbl2)
+    @test Tables.columnnames(lzymerge) === (:x, :y, :a, :b)
 end
 
 @testset "TypedTable validate" begin
@@ -84,6 +88,10 @@ end
     trow4 = typetab[4]
     lrow4 = lazytab[4]
     @test sum(trow4) === sum(lrow4)
-    @test values(trow4) == values(lrow4)
-    @test pairs(trow4) == pairs(lrow4)
+    @test all(values(trow4) .== values(lrow4))
+    @test all(zip(pairs(trow4), pairs(lrow4))) do (tkv, lkv)
+        tk, tv = tkv
+        lk, lv = lkv
+        (tk === lk) && (tv === lv)
+    end
 end
