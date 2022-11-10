@@ -1,7 +1,7 @@
 name = "LazyTables"
 uuid = "3f3958f0-9dd7-4ba3-9331-125492819f7d"
 authors = ["m-wells <mwellsa@gmail.com> and contributors"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 PrettyTables = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
