@@ -91,10 +91,12 @@ other Base methods
     return LazyTable(merge(data(x), data(y)))
 end
 
+@inline Base.filter(f, x::LazyTable) = x[map(f, x)]
+
 #===========================================================================================
 methods delegated to table
 ===========================================================================================#
-@inline Base.getindex(x::LazyTable, i::AbstractVector) = LazyTable(view(table(x), i))
+@inline Base.getindex(x::LazyTable, i::AbstractVector) = LazyTable(table(x)[i])
 @inline Base.size(x::LazyTable) = size(table(x))
 @inline Base.IndexStyle(x::LazyTable) = IndexStyle(table(x))
 
@@ -110,5 +112,3 @@ end
 @inline Base.vcat(x::LazyTable) = x
 @inline Base.hcat(x::Vararg{LazyTable}) = LazyTable(mapreduce(table, hcat, x))
 @inline Base.hcat(x::LazyTable) = x
-
-

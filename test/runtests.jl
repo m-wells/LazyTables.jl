@@ -69,7 +69,9 @@ end
     lzytbl = LazyTable(; x, y)
     @test map(sin, x) == sin.(x)
     @test map(sin, x) !== sin.(x) # it is lazy
-    for (_filter, _view) in zip(filter(row -> row.y, lzytbl), view(lzytbl, y))
+    _zip = zip(filter(row -> row.y, lzytbl), view(lzytbl, y))
+    @test length(_zip) > 0
+    for (_filter, _view) in _zip
         @test all(_filter .== _view)
     end
     lzyvcat = vcat(lzytbl, lzytbl)
